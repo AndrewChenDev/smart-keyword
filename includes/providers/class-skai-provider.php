@@ -43,8 +43,10 @@ abstract class Skai_Provider {
 		$seen = array();
 		$out  = array();
 		foreach ( $tags as $t ) {
-			$t = trim( (string) $t, " \t\n\r\0\x0B\"'`,，。、" );
-			if ( $t === '' ) {
+			$t = (string) $t;
+			// Strip leading/trailing whitespace, punctuation, and symbols (incl. ? ! 。 ？ ！ emojis, etc.).
+			$t = preg_replace( '/^[\s\p{P}\p{S}]+|[\s\p{P}\p{S}]+$/u', '', $t );
+			if ( $t === '' || $t === null ) {
 				continue;
 			}
 			$key = function_exists( 'mb_strtolower' ) ? mb_strtolower( $t, 'UTF-8' ) : strtolower( $t );
@@ -66,7 +68,8 @@ abstract class Skai_Provider {
 			. "Rules:\n"
 			. "- Output language MUST match the article's language. If the article is in Chinese, return Chinese tags; if English, return English tags. Mixed-language articles use the dominant language.\n"
 			. "- Each tag is a concise searchable keyword (Chinese: 2–8 characters; English: 1–4 words).\n"
-			. "- Focus on entities, topics, and search intent — not generic filler.\n"
+			. "- Tags MUST be plain noun phrases. No punctuation (no ? ! 。 ？ ！ . , : ; — quotes brackets emojis), no hashtags, no trailing/leading symbols.\n"
+			. "- Focus on entities, topics, and search intent — not generic filler or rhetorical questions.\n"
 			. "- Return ONLY a JSON array of strings. No prose, no markdown fences, no keys.\n\n"
 			. "Article:\n\"\"\"\n{$content}\n\"\"\"";
 	}
