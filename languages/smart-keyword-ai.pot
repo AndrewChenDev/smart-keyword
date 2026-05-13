@@ -1,0 +1,89 @@
+# Copyright (C) 2026 Andrew
+# This file is distributed under the same license as the Smart Keyword AI plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Smart Keyword AI 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-13 00:00+0000\n"
+"PO-Revision-Date: 2026-05-13 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: smart-keyword-ai\n"
+
+msgid "Smart Keyword AI"
+msgstr ""
+
+msgid "AI Settings"
+msgstr ""
+
+msgid "Active AI Provider"
+msgstr ""
+
+#, php-format
+msgid "%s API Key"
+msgstr ""
+
+#, php-format
+msgid "%s Model"
+msgstr ""
+
+#, php-format
+msgid "Default: %s"
+msgstr ""
+
+msgid "Tags per generation"
+msgstr ""
+
+msgid "Max characters sent to AI"
+msgstr ""
+
+msgid "Content exceeding this length is truncated to reduce token cost."
+msgstr ""
+
+msgid "Permission denied."
+msgstr ""
+
+msgid "Article content is empty."
+msgstr ""
+
+#, php-format
+msgid "API key for the current AI (%s) is not set."
+msgstr ""
+
+#, php-format
+msgid "Unknown AI provider: %s"
+msgstr ""
+
+msgid "Pick from AI tags"
+msgstr ""
+
+msgid "Generating…"
+msgstr ""
+
+msgid "Generation failed."
+msgstr ""
+
+#, php-format
+msgid "AI returned content that could not be parsed as tags: %s"
+msgstr ""
+
+#. translators: 1: provider name, 2: HTTP status code, 3: response body excerpt
+#, php-format
+msgid "%1$s HTTP %2$s: %3$s"
+msgstr ""
+
+msgid "OpenAI response is missing message.content."
+msgstr ""
+
+msgid "Anthropic response is missing a text block."
+msgstr ""
+
+msgid "Gemini response is missing a text part."
+msgstr ""
+
+msgid "DeepSeek response is missing message.content."
+msgstr ""

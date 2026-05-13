@@ -1,0 +1,38 @@
+.skai-link-wrap {
+	margin: 8px 0 0;
+	font-size: 12px;
+	line-height: 1.6;
+}
+
+.skai-generate-link {
+	color: #2271b1;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.skai-generate-link:hover {
+	color: #135e96;
+}
+
+.skai-generate-link.skai-disabled {
+	color: #8c8f94;
+	cursor: default;
+	pointer-events: none;
+}
+
+.skai-link-wrap .skai-spinner {
+	float: none;
+	margin: 0 0 0 4px;
+	visibility: hidden;
+	vertical-align: middle;
+}
+
+.skai-link-wrap .skai-message {
+	display: inline-block;
+	margin-left: 6px;
+	color: #50575e;
+}
+
+.skai-link-wrap .skai-message.skai-error {
+	color: #b32d2e;
+}

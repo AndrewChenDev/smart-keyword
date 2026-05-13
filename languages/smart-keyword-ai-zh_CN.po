@@ -1,0 +1,87 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Smart Keyword AI 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-13 00:00+0000\n"
+"PO-Revision-Date: 2026-05-13 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Simplified Chinese\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Domain: smart-keyword-ai\n"
+
+msgid "Smart Keyword AI"
+msgstr "Smart Keyword AI"
+
+msgid "AI Settings"
+msgstr "AI 设置"
+
+msgid "Active AI Provider"
+msgstr "当前使用的 AI"
+
+#, php-format
+msgid "%s API Key"
+msgstr "%s API 密钥"
+
+#, php-format
+msgid "%s Model"
+msgstr "%s 模型"
+
+#, php-format
+msgid "Default: %s"
+msgstr "默认:%s"
+
+msgid "Tags per generation"
+msgstr "每次生成的标签数量"
+
+msgid "Max characters sent to AI"
+msgstr "送入 AI 的最大字符数"
+
+msgid "Content exceeding this length is truncated to reduce token cost."
+msgstr "超出长度的部分会被截断,以降低 token 成本。"
+
+msgid "Permission denied."
+msgstr "权限不足。"
+
+msgid "Article content is empty."
+msgstr "文章内容为空。"
+
+#, php-format
+msgid "API key for the current AI (%s) is not set."
+msgstr "当前 AI(%s)的 API 密钥未设置。"
+
+#, php-format
+msgid "Unknown AI provider: %s"
+msgstr "未知的 AI 服务:%s"
+
+msgid "Pick from AI tags"
+msgstr "从 AI 标签中选择"
+
+msgid "Generating…"
+msgstr "生成中…"
+
+msgid "Generation failed."
+msgstr "生成失败。"
+
+#, php-format
+msgid "AI returned content that could not be parsed as tags: %s"
+msgstr "AI 返回的内容无法解析为标签:%s"
+
+#, php-format
+msgid "%1$s HTTP %2$s: %3$s"
+msgstr "%1$s HTTP %2$s:%3$s"
+
+msgid "OpenAI response is missing message.content."
+msgstr "OpenAI 的响应缺少 message.content。"
+
+msgid "Anthropic response is missing a text block."
+msgstr "Anthropic 的响应缺少 text 区块。"
+
+msgid "Gemini response is missing a text part."
+msgstr "Gemini 的响应缺少 text 部分。"
+
+msgid "DeepSeek response is missing message.content."
+msgstr "DeepSeek 的响应缺少 message.content。"
