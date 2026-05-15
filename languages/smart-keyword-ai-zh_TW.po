@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Smart Keyword AI 1.0.0\n"
+"Project-Id-Version: Smart Keyword AI 1.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-13 00:00+0000\n"
-"PO-Revision-Date: 2026-05-13 00:00+0000\n"
+"POT-Creation-Date: 2026-05-14 00:00+0000\n"
+"PO-Revision-Date: 2026-05-14 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Traditional Chinese\n"
 "Language: zh_TW\n"
@@ -85,3 +85,112 @@ msgstr "Gemini 的回應缺少 text 區塊。"
 
 msgid "DeepSeek response is missing message.content."
 msgstr "DeepSeek 的回應缺少 message.content。"
+
+msgid "Custom instruction"
+msgstr "自訂指令"
+
+msgid "Optional extra guidance appended to the AI prompt. Output format stays JSON regardless of what you write here."
+msgstr "附加到 AI 提示的選擇性指引。無論輸入什麼內容,輸出格式仍維持 JSON。"
+
+msgid "Custom…"
+msgstr "自訂⋯"
+
+msgid "Type a model ID"
+msgstr "輸入模型 ID"
+
+msgid "Refresh from API"
+msgstr "從 API 重新整理"
+
+msgid "Loading…"
+msgstr "載入中⋯"
+
+#, php-format
+msgid "Loaded %d models"
+msgstr "已載入 %d 個模型"
+
+msgid "No API key set — type a model name below."
+msgstr "尚未設定 API 金鑰 — 請於下方輸入模型名稱。"
+
+msgid "Could not fetch models."
+msgstr "無法取得模型清單。"
+
+msgid "Reset usage counts for the current month?"
+msgstr "確定要重置本月用量數據嗎?"
+
+msgid "Reset all usage history? This cannot be undone."
+msgstr "確定要重置全部用量歷史?此動作無法復原。"
+
+msgid "General"
+msgstr "一般"
+
+msgid "API & Models"
+msgstr "API 與模型"
+
+msgid "Usage"
+msgstr "用量"
+
+#, php-format
+msgid "Token usage — %s"
+msgstr "Token 用量 — %s"
+
+msgid "Token counts come from each provider's API response. Buckets reset automatically on the 1st of each month."
+msgstr "Token 數量來自各 AI 服務的 API 回應。每月 1 號自動重置。"
+
+msgid "Reset current month"
+msgstr "重置本月"
+
+msgid "Reset all history"
+msgstr "重置全部歷史"
+
+msgid "Previous months"
+msgstr "過往月份"
+
+msgid "Provider"
+msgstr "服務"
+
+msgid "Requests"
+msgstr "請求次數"
+
+msgid "Input tokens"
+msgstr "輸入 token"
+
+msgid "Output tokens"
+msgstr "輸出 token"
+
+msgid "Total tokens"
+msgstr "合計 token"
+
+msgid "Unknown provider."
+msgstr "未知的服務。"
+
+msgid "API key is not set for this provider."
+msgstr "此服務的 API 金鑰尚未設定。"
+
+#, php-format
+msgid "%1$s list-models HTTP %2$s"
+msgstr "%1$s 列出模型 HTTP %2$s"
+
+#, php-format
+msgid "Price: %s"
+msgstr "價格:%s"
+
+msgid "Price: unknown for this model"
+msgstr "價格:此模型無資料"
+
+msgid "Est. cost (USD)"
+msgstr "預估費用(美元)"
+
+msgid "Estimated total"
+msgstr "預估總計"
+
+msgid "Est. cost uses OpenRouter pricing for the specific model each request hit (cached daily)."
+msgstr "預估費用採用 OpenRouter 各次請求實際使用模型的價格(每日快取)。"
+
+msgid "No usage recorded for this month."
+msgstr "本月尚無用量記錄。"
+
+msgid "(legacy)"
+msgstr "(舊資料)"
+
+msgid "(unknown)"
+msgstr "(未知)"

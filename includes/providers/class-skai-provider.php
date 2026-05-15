@@ -7,6 +7,7 @@ abstract class Skai_Provider {
 
 	protected $api_key;
 	protected $model;
+	protected $slug = '';
 
 	public function __construct( $api_key, $model ) {
 		$this->api_key = (string) $api_key;
@@ -14,11 +15,13 @@ abstract class Skai_Provider {
 	}
 
 	/**
-	 * Each subclass implements the HTTP call. Must return the raw text response from the model
-	 * (the content portion only — not the wrapping JSON) as a string, or a WP_Error on failure.
+	 * Each subclass implements the HTTP call. May return either:
+	 *   - a plain string (the model's text content), or
+	 *   - an array shaped ['text' => string, 'usage' => ['input' => int, 'output' => int]]
+	 * or a WP_Error on failure.
 	 *
 	 * @param string $prompt
-	 * @return string|WP_Error
+	 * @return string|array|WP_Error
 	 */
 	abstract protected function request( $prompt );
 
@@ -31,11 +34,24 @@ abstract class Skai_Provider {
 			return $raw;
 		}
 
-		$tags = $this->parse_tags( $raw );
+		$text  = $raw;
+		$input = 0;
+		$output = 0;
+		if ( is_array( $raw ) ) {
+			$text   = isset( $raw['text'] ) ? (string) $raw['text'] : '';
+			$input  = isset( $raw['usage']['input'] )  ? intval( $raw['usage']['input'] )  : 0;
+			$output = isset( $raw['usage']['output'] ) ? intval( $raw['usage']['output'] ) : 0;
+		}
+
+		if ( $this->slug !== '' && class_exists( 'Skai_Usage' ) ) {
+			Skai_Usage::record( $this->slug, $this->model, $input, $output );
+		}
+
+		$tags = $this->parse_tags( $text );
 		if ( empty( $tags ) ) {
 			return new WP_Error(
 				'skai_parse',
-				sprintf( __( 'AI returned content that could not be parsed as tags: %s', 'smart-keyword-ai' ), mb_substr( $raw, 0, 200 ) )
+				sprintf( __( 'AI returned content that could not be parsed as tags: %s', 'smart-keyword-ai' ), mb_substr( $text, 0, 200 ) )
 			);
 		}
 
@@ -64,12 +80,21 @@ abstract class Skai_Provider {
 	}
 
 	protected function build_prompt( $content, $count ) {
+		$extra = '';
+		if ( class_exists( 'Skai_Settings' ) ) {
+			$custom = trim( (string) Skai_Settings::get( 'custom_instruction' ) );
+			if ( $custom !== '' ) {
+				$extra = "\nAdditional instructions:\n{$custom}\n\n";
+			}
+		}
+
 		return "You are an SEO expert. Generate exactly {$count} high-value SEO tag keywords for the article below.\n\n"
 			. "Rules:\n"
 			. "- Output language MUST match the article's language. If the article is in Chinese, return Chinese tags; if English, return English tags. Mixed-language articles use the dominant language.\n"
 			. "- Each tag is a concise searchable keyword (Chinese: 2–8 characters; English: 1–4 words).\n"
 			. "- Tags MUST be plain noun phrases. No punctuation (no ? ! 。 ？ ！ . , : ; — quotes brackets emojis), no hashtags, no trailing/leading symbols.\n"
 			. "- Focus on entities, topics, and search intent — not generic filler or rhetorical questions.\n"
+			. $extra
 			. "- Return ONLY a JSON array of strings. No prose, no markdown fences, no keys.\n\n"
 			. "Article:\n\"\"\"\n{$content}\n\"\"\"";
 	}

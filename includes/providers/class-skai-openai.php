@@ -5,6 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Skai_OpenAI extends Skai_Provider {
 
+	protected $slug = 'openai';
+
 	protected function request( $prompt ) {
 		$response = wp_remote_post( 'https://api.openai.com/v1/chat/completions', array(
 			'timeout' => 30,
@@ -34,6 +36,12 @@ class Skai_OpenAI extends Skai_Provider {
 			return new WP_Error( 'skai_openai', __( 'OpenAI response is missing message.content.', 'smart-keyword-ai' ) );
 		}
 
-		return (string) $json['choices'][0]['message']['content'];
+		return array(
+			'text'  => (string) $json['choices'][0]['message']['content'],
+			'usage' => array(
+				'input'  => isset( $json['usage']['prompt_tokens'] )     ? intval( $json['usage']['prompt_tokens'] )     : 0,
+				'output' => isset( $json['usage']['completion_tokens'] ) ? intval( $json['usage']['completion_tokens'] ) : 0,
+			),
+		);
 	}
 }

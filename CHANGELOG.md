@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-05-14
+
+### Added
+- **Custom instruction** textarea on the settings page. The text is injected into the AI prompt after the existing rules but before the JSON-output rule, so the output contract is preserved regardless of what the user writes.
+- **Tabbed settings page** with three tabs: **General** (provider, custom instruction, tag count, max content chars), **API & Models** (API key + model selector per provider), and **Usage**.
+- **Dynamic model dropdown** for every provider, populated from the vendor's list-models endpoint (OpenAI `/v1/models`, Anthropic `/v1/models`, Gemini `models.list`, DeepSeek `/models`) via a "Refresh from API" button. Results are cached as a 1-hour transient per API key. A **Custom…** option still allows typing any model ID the dropdown doesn't include.
+- **Token usage tracking** per provider, bucketed by month (`YYYY-MM`). Automatic monthly reset (no cron — each new month gets a fresh bucket). Up to 12 months of history retained, viewable under "Previous months". **Reset current month** and **Reset all history** buttons available on the Usage tab.
+- **Model pricing display** sourced from the OpenRouter catalog (cached 24h). Each model dropdown option shows `$X/M in | $Y/M out`; a "Price:" line below the dropdown reflects the currently selected model; the Usage tab gains an **Est. cost (USD)** column plus an **Estimated total** row computed from stored token counts × the currently configured model's price.
+
+### Changed
+- Settings page now enqueues its own dedicated JS/CSS on the plugin's settings screen only.
+- Provider `request()` method may now return either a plain string (legacy) or `['text' => …, 'usage' => ['input' => …, 'output' => …]]`. The base class accepts both, so any custom providers continue to work unmodified.
+- Model-list transients are invalidated when a provider's API key changes.
+- Token usage is now recorded per **(provider, model)** pair, not just per provider. Each provider row on the Usage tab gains a chevron toggle that expands to a per-model breakdown showing only the models actually used that month. Providers with no recorded usage are hidden. Est. cost is now computed per-model (using the exact model each request hit), so switching models mid-month no longer skews the estimate.
+- Updated Traditional Chinese (`zh_TW`) and Simplified Chinese (`zh_CN`) translations to cover all new strings (custom instruction, tab labels, model dropdown, Usage tab).
+
 ## [1.0.1] - 2026-05-13
 
 ### Fixed

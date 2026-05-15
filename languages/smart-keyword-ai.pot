@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the Smart Keyword AI plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Smart Keyword AI 1.0.0\n"
+"Project-Id-Version: Smart Keyword AI 1.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-13 00:00+0000\n"
-"PO-Revision-Date: 2026-05-13 00:00+0000\n"
+"POT-Creation-Date: 2026-05-14 00:00+0000\n"
+"PO-Revision-Date: 2026-05-14 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: \n"
@@ -86,4 +86,115 @@ msgid "Gemini response is missing a text part."
 msgstr ""
 
 msgid "DeepSeek response is missing message.content."
+msgstr ""
+
+msgid "Custom instruction"
+msgstr ""
+
+msgid "Optional extra guidance appended to the AI prompt. Output format stays JSON regardless of what you write here."
+msgstr ""
+
+msgid "Custom…"
+msgstr ""
+
+msgid "Type a model ID"
+msgstr ""
+
+msgid "Refresh from API"
+msgstr ""
+
+msgid "Loading…"
+msgstr ""
+
+#, php-format
+msgid "Loaded %d models"
+msgstr ""
+
+msgid "No API key set — type a model name below."
+msgstr ""
+
+msgid "Could not fetch models."
+msgstr ""
+
+msgid "Reset usage counts for the current month?"
+msgstr ""
+
+msgid "Reset all usage history? This cannot be undone."
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "API & Models"
+msgstr ""
+
+msgid "Usage"
+msgstr ""
+
+#. translators: %s: month label like "May 2026"
+#, php-format
+msgid "Token usage — %s"
+msgstr ""
+
+msgid "Token counts come from each provider's API response. Buckets reset automatically on the 1st of each month."
+msgstr ""
+
+msgid "Reset current month"
+msgstr ""
+
+msgid "Reset all history"
+msgstr ""
+
+msgid "Previous months"
+msgstr ""
+
+msgid "Provider"
+msgstr ""
+
+msgid "Requests"
+msgstr ""
+
+msgid "Input tokens"
+msgstr ""
+
+msgid "Output tokens"
+msgstr ""
+
+msgid "Total tokens"
+msgstr ""
+
+msgid "Unknown provider."
+msgstr ""
+
+msgid "API key is not set for this provider."
+msgstr ""
+
+#. translators: 1: provider label e.g. OpenAI, 2: HTTP status code
+#, php-format
+msgid "%1$s list-models HTTP %2$s"
+msgstr ""
+
+#, php-format
+msgid "Price: %s"
+msgstr ""
+
+msgid "Price: unknown for this model"
+msgstr ""
+
+msgid "Est. cost (USD)"
+msgstr ""
+
+msgid "Estimated total"
+msgstr ""
+
+msgid "Est. cost uses OpenRouter pricing for the specific model each request hit (cached daily)."
+msgstr ""
+
+msgid "No usage recorded for this month."
+msgstr ""
+
+msgid "(legacy)"
+msgstr ""
+
+msgid "(unknown)"
 msgstr ""

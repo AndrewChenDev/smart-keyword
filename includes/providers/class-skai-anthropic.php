@@ -5,6 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Skai_Anthropic extends Skai_Provider {
 
+	protected $slug = 'anthropic';
+
 	protected function request( $prompt ) {
 		$response = wp_remote_post( 'https://api.anthropic.com/v1/messages', array(
 			'timeout' => 30,
@@ -46,6 +48,12 @@ class Skai_Anthropic extends Skai_Provider {
 			return new WP_Error( 'skai_anthropic', __( 'Anthropic response is missing a text block.', 'smart-keyword-ai' ) );
 		}
 
-		return $text;
+		return array(
+			'text'  => $text,
+			'usage' => array(
+				'input'  => isset( $json['usage']['input_tokens'] )  ? intval( $json['usage']['input_tokens'] )  : 0,
+				'output' => isset( $json['usage']['output_tokens'] ) ? intval( $json['usage']['output_tokens'] ) : 0,
+			),
+		);
 	}
 }
