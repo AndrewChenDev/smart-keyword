@@ -5,6 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Skai_Gemini extends Skai_Provider {
 
+	protected $slug = 'gemini';
+
 	protected function request( $prompt ) {
 		$url = sprintf(
 			'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s',
@@ -50,6 +52,12 @@ class Skai_Gemini extends Skai_Provider {
 			return new WP_Error( 'skai_gemini', __( 'Gemini response is missing a text part.', 'smart-keyword-ai' ) );
 		}
 
-		return $text;
+		return array(
+			'text'  => $text,
+			'usage' => array(
+				'input'  => isset( $json['usageMetadata']['promptTokenCount'] )     ? intval( $json['usageMetadata']['promptTokenCount'] )     : 0,
+				'output' => isset( $json['usageMetadata']['candidatesTokenCount'] ) ? intval( $json['usageMetadata']['candidatesTokenCount'] ) : 0,
+			),
+		);
 	}
 }

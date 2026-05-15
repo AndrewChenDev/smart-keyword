@@ -1,0 +1,78 @@
+.skai-settings .nav-tab-wrapper {
+	margin-bottom: 1em;
+}
+
+.skai-settings .skai-tab-pane {
+	margin-top: 0.5em;
+}
+
+.skai-settings .skai-model-select,
+.skai-settings .skai-model-custom {
+	vertical-align: middle;
+}
+
+.skai-settings .skai-model-status {
+	font-style: italic;
+	font-size: 12px;
+}
+
+.skai-settings .skai-usage-table {
+	max-width: 720px;
+	margin-bottom: 1em;
+}
+
+.skai-settings .skai-usage-table th,
+.skai-settings .skai-usage-table td {
+	padding: 8px 12px;
+}
+
+.skai-settings .skai-usage-history {
+	margin-top: 1.5em;
+}
+
+.skai-settings .skai-usage-history summary {
+	cursor: pointer;
+	font-weight: 600;
+	margin-bottom: 0.5em;
+}
+
+.skai-settings .skai-usage-history h3 {
+	margin-top: 1em;
+}
+
+.skai-settings .skai-toggle {
+	background: none;
+	border: 0;
+	padding: 0;
+	font: inherit;
+	color: inherit;
+	cursor: pointer;
+	text-align: left;
+}
+
+.skai-settings .skai-toggle:hover,
+.skai-settings .skai-toggle:focus {
+	color: #2271b1;
+	outline: none;
+}
+
+.skai-settings .skai-model-rows > td {
+	padding: 0 0 0 2.5em;
+	background: #fafafa;
+}
+
+.skai-settings .skai-model-subtable {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0;
+}
+
+.skai-settings .skai-model-subtable td {
+	padding: 6px 12px;
+	border-top: 1px solid #f0f0f1;
+	font-size: 13px;
+}
+
+.skai-settings .skai-model-subtable td:first-child {
+	padding-left: 0;
+}

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Smart Keyword AI
  * Description: Use AI to auto-generate SEO tag keywords for the article being edited. Supports OpenAI, Anthropic, Gemini, DeepSeek.
- * Version:     1.0.1
+ * Version:     1.1.0
  * Author:      Andrew
  * Text Domain: smart-keyword-ai
  * Domain Path: /languages
@@ -12,12 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SKAI_VERSION', '1.0.1' );
+define( 'SKAI_VERSION', '1.1.0' );
 define( 'SKAI_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SKAI_URL', plugin_dir_url( __FILE__ ) );
 
 require_once SKAI_PATH . 'includes/class-skai-settings.php';
 require_once SKAI_PATH . 'includes/class-skai-content.php';
+require_once SKAI_PATH . 'includes/class-skai-usage.php';
+require_once SKAI_PATH . 'includes/class-skai-pricing.php';
 require_once SKAI_PATH . 'includes/providers/class-skai-provider.php';
 require_once SKAI_PATH . 'includes/providers/class-skai-openai.php';
 require_once SKAI_PATH . 'includes/providers/class-skai-anthropic.php';
