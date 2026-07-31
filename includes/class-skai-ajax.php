@@ -100,7 +100,10 @@ class Skai_Ajax {
 	protected function pricing_payload( $provider, $models ) {
 		$out = array();
 		foreach ( $models as $m ) {
-			$p = Skai_Pricing::get_for( $provider, $m );
+			// Skip the per-model discount lookup here (up to ~70 models) so a manual
+			// refresh stays fast; the corrected price is used everywhere it's actually
+			// relied on (selected-model "Price:" line, Usage-tab cost estimates).
+			$p = Skai_Pricing::get_for( $provider, $m, false );
 			if ( is_array( $p ) ) {
 				$out[ $m ] = array(
 					'input'  => $p['input'],

@@ -5,9 +5,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Skai_Pricing {
 
-	const TRANSIENT_KEY = 'skai_openrouter_pricing';
-	const TTL           = DAY_IN_SECONDS;
-	const ENDPOINT      = 'https://openrouter.ai/api/v1/models';
+	const TRANSIENT_KEY        = 'skai_openrouter_pricing';
+	const TTL                  = DAY_IN_SECONDS;
+	const ENDPOINT             = 'https://openrouter.ai/api/v1/models';
+	const ENDPOINT_DETAIL_TMPL = 'https://openrouter.ai/api/v1/models/%s/%s/endpoints';
+	const DISCOUNT_PREFIX      = 'skai_openrouter_discount_';
 
 	public static function provider_prefix( $provider ) {
 		switch ( $provider ) {
@@ -17,6 +19,23 @@ class Skai_Pricing {
 				return 'anthropic';
 			case 'gemini':
 				return 'google';
+			case 'deepseek':
+				return 'deepseek';
+		}
+		return '';
+	}
+
+	// The OpenRouter "endpoints" tag for the vendor's own direct API — distinct from
+	// provider_prefix() above, which is the bulk /models catalog prefix. e.g. Gemini's
+	// bulk prefix is "google" but its direct-API endpoint tag is "google-ai-studio".
+	protected static function endpoint_tag( $provider ) {
+		switch ( $provider ) {
+			case 'openai':
+				return 'openai';
+			case 'anthropic':
+				return 'anthropic';
+			case 'gemini':
+				return 'google-ai-studio';
 			case 'deepseek':
 				return 'deepseek';
 		}
@@ -91,18 +110,88 @@ class Skai_Pricing {
 		return $payload;
 	}
 
-	public static function get_for( $provider, $model_id ) {
+	public static function get_for( $provider, $model_id, $apply_discount = true ) {
 		$data = self::get_all();
 		$bp   = isset( $data['by_provider'][ $provider ] ) ? $data['by_provider'][ $provider ] : array();
+
+		$bare = null;
 		if ( isset( $bp[ $model_id ] ) ) {
-			return $bp[ $model_id ];
+			$bare = $model_id;
+		} else {
+			// Loose match: strip common suffixes / latest tags.
+			$stripped = preg_replace( '/-latest$|-\d{8}$|-\d{4}-\d{2}-\d{2}$/', '', $model_id );
+			// Some catalogs use a dot before the trailing minor-version number where
+			// the provider's own id uses a dash (e.g. "claude-haiku-4-5" vs. "claude-haiku-4.5").
+			$dotted = preg_replace( '/-(\d+)$/', '.$1', $model_id );
+			if ( $stripped !== $model_id && isset( $bp[ $stripped ] ) ) {
+				$bare = $stripped;
+			} elseif ( $dotted !== $model_id && isset( $bp[ $dotted ] ) ) {
+				$bare = $dotted;
+			}
 		}
-		// Loose match: strip common suffixes / latest tags.
-		$stripped = preg_replace( '/-latest$|-\d{8}$|-\d{4}-\d{2}-\d{2}$/', '', $model_id );
-		if ( $stripped !== $model_id && isset( $bp[ $stripped ] ) ) {
-			return $bp[ $stripped ];
+
+		if ( null === $bare ) {
+			return null;
 		}
-		return null;
+
+		$price = $bp[ $bare ];
+
+		if ( $apply_discount ) {
+			$discount = self::get_discount( $provider, $bare );
+			if ( $discount > 0.0 && $discount < 1.0 ) {
+				$price = array(
+					'input'  => $price['input']  / ( 1.0 - $discount ),
+					'output' => $price['output'] / ( 1.0 - $discount ),
+				);
+			}
+		}
+
+		return $price;
+	}
+
+	// OpenRouter's bulk /models list returns whatever promotional price is currently
+	// active with no indication a discount applies. The per-model "endpoints" detail
+	// resource exposes the discount fraction on the endpoint tagged with the vendor's
+	// own name (the direct API this plugin actually calls, not OpenRouter's flex/
+	// priority tiers or third-party rehosts like Azure/Bedrock). Dividing the current
+	// price by (1 - discount) recovers the real, non-promotional price.
+	public static function get_discount( $provider, $bare_id ) {
+		$tag = self::endpoint_tag( $provider );
+		if ( '' === $tag ) {
+			return 0.0;
+		}
+
+		$transient_key = self::DISCOUNT_PREFIX . $provider . '_' . md5( $bare_id );
+		$cached        = get_transient( $transient_key );
+		if ( false !== $cached ) {
+			return floatval( $cached );
+		}
+
+		$prefix   = self::provider_prefix( $provider );
+		$url      = sprintf( self::ENDPOINT_DETAIL_TMPL, rawurlencode( $prefix ), rawurlencode( $bare_id ) );
+		$response = wp_remote_get( $url, array(
+			'timeout' => 10,
+			'headers' => array( 'Accept' => 'application/json' ),
+		) );
+
+		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+			set_transient( $transient_key, 0.0, MINUTE_IN_SECONDS * 15 );
+			return 0.0;
+		}
+
+		$json      = json_decode( wp_remote_retrieve_body( $response ), true );
+		$endpoints = isset( $json['data']['endpoints'] ) && is_array( $json['data']['endpoints'] ) ? $json['data']['endpoints'] : array();
+
+		$discount = 0.0;
+		foreach ( $endpoints as $endpoint ) {
+			if ( isset( $endpoint['tag'] ) && $endpoint['tag'] === $tag ) {
+				$discount = isset( $endpoint['pricing']['discount'] ) ? floatval( $endpoint['pricing']['discount'] ) : 0.0;
+				break;
+			}
+		}
+
+		set_transient( $transient_key, $discount, self::TTL );
+		return $discount;
 	}
 
 	public static function map_for_provider( $provider ) {
