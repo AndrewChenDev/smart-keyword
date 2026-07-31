@@ -59,6 +59,10 @@ class Skai_Ajax {
 		}
 		check_ajax_referer( 'skai_fetch_models', 'nonce' );
 
+		if ( function_exists( 'set_time_limit' ) ) {
+			@set_time_limit( 0 );
+		}
+
 		$provider = isset( $_POST['provider'] ) ? sanitize_key( (string) wp_unslash( $_POST['provider'] ) ) : '';
 		$valid    = array( 'openai', 'anthropic', 'gemini', 'deepseek' );
 		if ( ! in_array( $provider, $valid, true ) ) {
@@ -100,10 +104,11 @@ class Skai_Ajax {
 	protected function pricing_payload( $provider, $models ) {
 		$out = array();
 		foreach ( $models as $m ) {
-			// Skip the per-model discount lookup here (up to ~70 models) so a manual
-			// refresh stays fast; the corrected price is used everywhere it's actually
-			// relied on (selected-model "Price:" line, Usage-tab cost estimates).
-			$p = Skai_Pricing::get_for( $provider, $m, false );
+			// Apply the per-model discount correction so the refreshed dropdown matches
+			// the real, non-promotional price shown elsewhere (selected-model "Price:"
+			// line, Usage-tab cost estimates). set_time_limit(0) above covers the
+			// resulting burst of per-model lookups on a cache-cold refresh.
+			$p = Skai_Pricing::get_for( $provider, $m, true );
 			if ( is_array( $p ) ) {
 				$out[ $m ] = array(
 					'input'  => $p['input'],
