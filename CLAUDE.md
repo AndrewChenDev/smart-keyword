@@ -45,3 +45,15 @@ The request lifecycle for tag generation:
 ## Internationalization
 
 All user-facing strings use `__()` / `esc_html_e()` with the `smart-keyword-ai` text domain. Translation files are in `languages/`. The `.pot` template is `languages/smart-keyword-ai.pot`.
+
+## Releasing a new version
+
+The README's WP-CLI install command (`wp plugin install .../releases/latest/download/smart-keyword-ai.zip`) depends on **every** GitHub release having a `smart-keyword-ai.zip` asset attached — GitHub's `/releases/latest/download/<name>` URL only 302s to that filename if the *newest* release has it. Skipping this step on a release silently breaks the install command until the next release. After bumping the version and tagging:
+
+```sh
+rm -rf /tmp/skai-zip-build && mkdir -p /tmp/skai-zip-build/smart-keyword-ai
+git archive HEAD | tar -x -C /tmp/skai-zip-build/smart-keyword-ai
+cd /tmp/skai-zip-build/smart-keyword-ai && rm -f .gitattributes .gitignore CLAUDE.md README.md CHANGELOG.md
+cd /tmp/skai-zip-build && zip -r -X smart-keyword-ai.zip smart-keyword-ai
+gh release upload <tag> smart-keyword-ai.zip
+```

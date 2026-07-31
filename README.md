@@ -2,6 +2,20 @@
 
 **Smart Keyword AI** is a WordPress plugin that adds an "Pick from AI tags" link inside the Tags metabox on the post editor. Clicking it calls an AI provider to generate SEO tag keywords from the post content and inserts them into WordPress's built-in tag input.
 
+## Install via WP-CLI
+
+Installs whatever the current latest GitHub release is — this command never needs to change between releases:
+
+```sh
+wp plugin install https://github.com/AndrewChenDev/smart-keyword/releases/latest/download/smart-keyword-ai.zip --activate
+```
+
+To upgrade to the newest release later:
+
+```sh
+wp plugin install https://github.com/AndrewChenDev/smart-keyword/releases/latest/download/smart-keyword-ai.zip --force --activate
+```
+
 ## Development setup
 
 This is a plain PHP WordPress plugin — no build step, no `package.json`, no Composer. Drop the folder into `wp-content/plugins/` of a local WordPress install and activate it. There is no test suite.
