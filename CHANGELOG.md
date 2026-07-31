@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2026-07-30
+
+### Fixed
+- **Critical:** OpenAI tag generation was failing outright (`HTTP 400: 'temperature' does not support 0.3 with this model`) for every reasoning/GPT-5-family model (o1, o3, o4-mini, gpt-5, gpt-5.x, etc.), since those models reject any non-default `temperature`. `Skai_OpenAI::request()` now retries once without `temperature` when this specific error is returned, so generation works regardless of which OpenAI model is selected.
+
 ## [1.1.1] - 2026-07-30
 
 ### Fixed
