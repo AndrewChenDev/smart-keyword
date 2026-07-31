@@ -34,7 +34,7 @@ class Skai_Settings {
 			'deepseek_key'       => '',
 			'deepseek_model'     => 'deepseek-chat',
 			'tag_count'          => 6,
-			'max_content_chars'  => 4000,
+			'max_content_chars'  => 0,
 			'custom_instruction' => '',
 		);
 	}
@@ -103,10 +103,8 @@ class Skai_Settings {
 		add_settings_field( 'max_content_chars', __( 'Max characters sent to AI', 'smart-keyword-ai' ), array( $this, 'field_text' ), 'skai-settings', 'skai_general', array(
 			'key'         => 'max_content_chars',
 			'type'        => 'number',
-			'class'       => 'small-text',
-			'min'         => 500,
-			'max'         => 20000,
-			'description' => __( 'Content exceeding this length is truncated to reduce token cost.', 'smart-keyword-ai' ),
+			'class'       => 'regular-text',
+			'description' => __( '0 = no limit (send the full article to the AI). Otherwise, this caps how many characters of the article are sent — no minimum or maximum enforced.', 'smart-keyword-ai' ),
 		) );
 
 		// --- API & Models tab ---
@@ -291,7 +289,7 @@ class Skai_Settings {
 			$out['tag_count'] = max( 1, min( 20, intval( $input['tag_count'] ) ) );
 		}
 		if ( isset( $input['max_content_chars'] ) ) {
-			$out['max_content_chars'] = max( 500, min( 20000, intval( $input['max_content_chars'] ) ) );
+			$out['max_content_chars'] = max( 0, intval( $input['max_content_chars'] ) );
 		}
 
 		if ( isset( $input['custom_instruction'] ) ) {

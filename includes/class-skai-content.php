@@ -36,11 +36,13 @@ class Skai_Content {
 		$c = preg_replace( '/\s+/u', ' ', $c );
 		$c = trim( $c );
 
-		$max_chars = max( 100, intval( $max_chars ) );
-		if ( function_exists( 'mb_substr' ) ) {
-			$c = mb_substr( $c, 0, $max_chars, 'UTF-8' );
-		} else {
-			$c = substr( $c, 0, $max_chars );
+		$max_chars = intval( $max_chars );
+		if ( $max_chars > 0 ) {
+			if ( function_exists( 'mb_substr' ) ) {
+				$c = mb_substr( $c, 0, $max_chars, 'UTF-8' );
+			} else {
+				$c = substr( $c, 0, $max_chars );
+			}
 		}
 
 		return $c;
