@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2026-07-30
+
+### Fixed
+- Model pricing now shows the real, non-promotional price everywhere, including the model dropdown after clicking **Refresh from API**. OpenRouter's bulk catalog silently returns whatever promotional discount is currently active (e.g. `gpt-5.6-luna` showed $0.60/M output instead of the real $1.20/M); `Skai_Pricing::get_for()` backs out the discount via OpenRouter's per-model endpoints resource. This correction previously applied only to the initial page load and the "Price:" line — the AJAX payload behind "Refresh from API" was left uncorrected for performance reasons and is now fixed to match.
+- Claude pricing lookups failing outright due to a dash/dot id mismatch between the plugin's default model id and OpenRouter's catalog id.
+
+### Changed
+- **Max characters sent to AI** now accepts `0` to mean "no limit" (send the full article). Previously the value was always clamped to 500-20000, forcing truncation even when the user wanted the entire post sent.
+
 ## [1.1.0] - 2026-05-14
 
 ### Added
