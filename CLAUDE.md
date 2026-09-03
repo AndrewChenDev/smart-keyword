@@ -29,7 +29,7 @@ The request lifecycle for tag generation:
 
 | Class | File | Role |
 |---|---|---|
-| `Skai_Settings` | `includes/class-skai-settings.php` | WP options page; stores all config under the `skai_options` option key |
+| `Skai_Settings` | `includes/class-skai-settings.php` | WP options page; stores config under `skai_options` and resolves provider keys from `wp-config.php` when configured |
 | `Skai_Content` | `includes/class-skai-content.php` | Static `prepare()` strips shortcodes, HTML, image URLs, then truncates to `max_content_chars` |
 | `Skai_Provider` | `includes/providers/class-skai-provider.php` | Abstract base; owns prompt construction, response parsing, deduplication |
 | `Skai_Ajax` | `includes/class-skai-ajax.php` | Single AJAX handler; instantiates the active provider via `make_provider()` |
@@ -40,7 +40,7 @@ The request lifecycle for tag generation:
 1. Create `includes/providers/class-skai-{slug}.php` extending `Skai_Provider`.
 2. Implement `request( $prompt )` — return the plain-text string from the model, or a `WP_Error`.
 3. `require_once` it in `smart-keyword-ai.php`.
-4. Add the slug to `Skai_Settings::defaults()` (with `{slug}_key` and `{slug}_model`), the `$valid_p` array in `sanitize()`, the provider dropdown in `field_provider()`, and the `make_provider()` switch in `Skai_Ajax`.
+4. Add the slug to `Skai_Settings::defaults()` (with `{slug}_key` and `{slug}_model`), `providers()`, `external_key_constants()`, and the `make_provider()` and model-fetch switches in `Skai_Ajax`.
 
 ## Internationalization
 

@@ -26,6 +26,18 @@ msgstr "目前使用的 AI"
 msgid "%s API Key"
 msgstr "%s API 金鑰"
 
+msgid "Configured securely in wp-config.php. The key is not stored or displayed here."
+msgstr "已在 wp-config.php 中安全設定。金鑰不會儲存或顯示於此處。"
+
+msgid "An API key is configured. Enter a new key to replace it; the existing key is never displayed."
+msgstr "已設定 API 金鑰。輸入新金鑰即可取代；現有金鑰永不顯示。"
+
+msgid "Remove the saved API key"
+msgstr "移除已儲存的 API 金鑰"
+
+msgid "No API key is configured."
+msgstr "尚未設定 API 金鑰。"
+
 #, php-format
 msgid "%s Model"
 msgstr "%s 模型"

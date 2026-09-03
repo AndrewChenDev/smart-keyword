@@ -74,7 +74,7 @@ class Skai_Ajax {
 			wp_send_json_error( array( 'code' => 'no_key', 'message' => __( 'API key is not set for this provider.', 'smart-keyword-ai' ) ) );
 		}
 
-		$cache_key = 'skai_models_' . $provider . '_' . md5( $api_key );
+		$cache_key = 'skai_models_' . $provider . '_' . Skai_Settings::key_fingerprint( $api_key );
 		$cached    = get_transient( $cache_key );
 		if ( is_array( $cached ) ) {
 			wp_send_json_success( array(
@@ -196,8 +196,11 @@ class Skai_Ajax {
 	}
 
 	protected function fetch_gemini_models( $api_key ) {
-		$url = 'https://generativelanguage.googleapis.com/v1beta/models?key=' . rawurlencode( $api_key );
-		$response = wp_remote_get( $url, array( 'timeout' => 15 ) );
+		$url = 'https://generativelanguage.googleapis.com/v1beta/models';
+		$response = wp_remote_get( $url, array(
+			'timeout' => 15,
+			'headers' => array( 'x-goog-api-key' => $api_key ),
+		) );
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}

@@ -54,10 +54,52 @@ class Skai_Settings {
 		return isset( $d[ $k ] ) ? $d[ $k ] : '';
 	}
 
+	private static function external_key_constants() {
+		return array(
+			'openai'    => 'SKAI_OPENAI_API_KEY',
+			'anthropic' => 'SKAI_ANTHROPIC_API_KEY',
+			'gemini'    => 'SKAI_GEMINI_API_KEY',
+			'deepseek'  => 'SKAI_DEEPSEEK_API_KEY',
+		);
+	}
+
+	private static function external_key_value( $provider ) {
+		$constants = self::external_key_constants();
+		if ( ! isset( $constants[ $provider ] ) || ! defined( $constants[ $provider ] ) ) {
+			return null;
+		}
+
+		$value = constant( $constants[ $provider ] );
+		if ( ! is_string( $value ) || '' === trim( $value ) ) {
+			return null;
+		}
+
+		return trim( $value );
+	}
+
 	public static function get( $key ) {
+		foreach ( array_keys( self::external_key_constants() ) as $provider ) {
+			if ( $provider . '_key' === $key ) {
+				$external_key = self::external_key_value( $provider );
+				if ( null !== $external_key ) {
+					return $external_key;
+				}
+				break;
+			}
+		}
+
 		$opts = get_option( self::OPTION, array() );
 		$opts = is_array( $opts ) ? array_merge( self::defaults(), $opts ) : self::defaults();
 		return isset( $opts[ $key ] ) ? $opts[ $key ] : null;
+	}
+
+	public static function has_external_key( $provider ) {
+		return null !== self::external_key_value( $provider );
+	}
+
+	public static function key_fingerprint( $api_key ) {
+		$secret = function_exists( 'wp_salt' ) ? wp_salt( 'auth' ) : 'smart-keyword-ai-model-cache';
+		return substr( hash_hmac( 'sha256', (string) $api_key, $secret ), 0, 32 );
 	}
 
 	public function add_menu() {
@@ -114,13 +156,12 @@ class Skai_Settings {
 			add_settings_field(
 				$slug . '_key',
 				sprintf( __( '%s API Key', 'smart-keyword-ai' ), $label ),
-				array( $this, 'field_text' ),
+				array( $this, 'field_api_key' ),
 				'skai-settings',
 				'skai_api',
 				array(
-					'key'   => $slug . '_key',
-					'type'  => 'password',
-					'class' => 'regular-text',
+					'key'      => $slug . '_key',
+					'provider' => $slug,
 				)
 			);
 			add_settings_field(
@@ -175,6 +216,41 @@ class Skai_Settings {
 
 		if ( ! empty( $args['description'] ) ) {
 			echo ' <span class="description">' . esc_html( $args['description'] ) . '</span>';
+		}
+	}
+
+	public function field_api_key( $args ) {
+		$key          = $args['key'];
+		$provider     = $args['provider'];
+		$external     = self::has_external_key( $provider );
+		$stored       = get_option( self::OPTION, array() );
+		$stored       = is_array( $stored ) && ! empty( $stored[ $key ] );
+		$disabled     = $external ? ' disabled="disabled"' : '';
+		$autocomplete = $external ? 'off' : 'new-password';
+
+		printf(
+			'<input type="password" class="regular-text" name="%s[%s]" value="" autocomplete="%s" spellcheck="false"%s />',
+			esc_attr( self::OPTION ),
+			esc_attr( $key ),
+			esc_attr( $autocomplete ),
+			$disabled
+		);
+
+		if ( $external ) {
+			echo '<p class="description">' . esc_html__( 'Configured securely in wp-config.php. The key is not stored or displayed here.', 'smart-keyword-ai' ) . '</p>';
+			return;
+		}
+
+		if ( $stored ) {
+			echo '<p class="description">' . esc_html__( 'An API key is configured. Enter a new key to replace it; the existing key is never displayed.', 'smart-keyword-ai' ) . '</p>';
+			printf(
+				'<label><input type="checkbox" name="%s[%s_remove]" value="1" /> %s</label>',
+				esc_attr( self::OPTION ),
+				esc_attr( $key ),
+				esc_html__( 'Remove the saved API key', 'smart-keyword-ai' )
+			);
+		} else {
+			echo '<p class="description">' . esc_html__( 'No API key is configured.', 'smart-keyword-ai' ) . '</p>';
 		}
 	}
 
@@ -273,8 +349,16 @@ class Skai_Settings {
 		}
 
 		foreach ( $valid_p as $p ) {
-			if ( isset( $input[ $p . '_key' ] ) ) {
-				$out[ $p . '_key' ] = trim( sanitize_text_field( $input[ $p . '_key' ] ) );
+			$key_name    = $p . '_key';
+			$remove_name = $key_name . '_remove';
+
+			if ( self::has_external_key( $p ) || ! empty( $input[ $remove_name ] ) ) {
+				$out[ $key_name ] = '';
+			} elseif ( isset( $input[ $key_name ] ) ) {
+				$new_key = trim( sanitize_text_field( wp_unslash( $input[ $key_name ] ) ) );
+				if ( '' !== $new_key ) {
+					$out[ $key_name ] = $new_key;
+				}
 			}
 			if ( isset( $input[ $p . '_model' ] ) ) {
 				$m = trim( sanitize_text_field( $input[ $p . '_model' ] ) );
@@ -312,10 +396,10 @@ class Skai_Settings {
 			$new_key = isset( $new[ $p . '_key' ] ) ? $new[ $p . '_key' ] : '';
 			if ( $old_key !== $new_key ) {
 				if ( $old_key !== '' ) {
-					delete_transient( 'skai_models_' . $p . '_' . md5( (string) $old_key ) );
+					delete_transient( 'skai_models_' . $p . '_' . self::key_fingerprint( $old_key ) );
 				}
 				if ( $new_key !== '' ) {
-					delete_transient( 'skai_models_' . $p . '_' . md5( (string) $new_key ) );
+					delete_transient( 'skai_models_' . $p . '_' . self::key_fingerprint( $new_key ) );
 				}
 			}
 		}

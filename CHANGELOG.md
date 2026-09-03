@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2026-09-03
+
+### Security
+- API keys are no longer rendered into settings-page HTML; blank inputs preserve existing credentials and saved keys can be explicitly removed.
+- Added `SKAI_OPENAI_API_KEY`, `SKAI_ANTHROPIC_API_KEY`, `SKAI_GEMINI_API_KEY`, and `SKAI_DEEPSEEK_API_KEY` support for keeping provider keys in `wp-config.php` and out of the WordPress database.
+- Gemini authentication now uses the `x-goog-api-key` request header instead of putting credentials in request URLs.
+- Model-cache credential fingerprints now use a WordPress-salted HMAC instead of an unsalted MD5 hash.
+
 ## [1.1.2] - 2026-07-30
 
 ### Fixed

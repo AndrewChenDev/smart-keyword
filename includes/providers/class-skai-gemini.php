@@ -9,15 +9,15 @@ class Skai_Gemini extends Skai_Provider {
 
 	protected function request( $prompt ) {
 		$url = sprintf(
-			'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s',
-			rawurlencode( $this->model ),
-			rawurlencode( $this->api_key )
+			'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent',
+			rawurlencode( $this->model )
 		);
 
 		$response = wp_remote_post( $url, array(
 			'timeout' => 30,
 			'headers' => array(
-				'Content-Type' => 'application/json',
+				'x-goog-api-key' => $this->api_key,
+				'Content-Type'   => 'application/json',
 			),
 			'body'    => wp_json_encode( array(
 				'contents'         => array(

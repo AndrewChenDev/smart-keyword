@@ -26,6 +26,30 @@ To work on it with a local WordPress:
 - Activate the plugin in WP Admin → Plugins.
 - Set an API key in WP Admin → Settings → Smart Keyword AI.
 
+## Secure API key setup
+
+Keep provider API keys out of the WordPress database by defining them in
+`wp-config.php`. Add only the providers you use above the
+`/* That's all, stop editing! */` line:
+
+```php
+define( 'SKAI_OPENAI_API_KEY', 'replace-with-your-new-project-key' );
+define( 'SKAI_ANTHROPIC_API_KEY', 'replace-with-your-new-key' );
+define( 'SKAI_GEMINI_API_KEY', 'replace-with-your-new-key' );
+define( 'SKAI_DEEPSEEK_API_KEY', 'replace-with-your-new-key' );
+```
+
+Each non-empty constant takes precedence over that provider's settings-page
+value. Existing OpenAI-only configurations continue working unchanged. After
+adding a constant, open **Settings → Smart Keyword AI** and save once; this
+removes any old database copy for that provider. The settings page never
+displays saved API keys in its HTML.
+
+Keep `wp-config.php` out of version control. Use project-scoped or restricted
+keys with only the permissions this site needs, and configure budget alerts and
+usage limits where available. If a key may have leaked, revoke it immediately,
+review recent usage, create a replacement, and update the constant.
+
 ## Architecture
 
 The request lifecycle for tag generation:
@@ -39,7 +63,7 @@ The request lifecycle for tag generation:
 
 | Class | File | Role |
 |---|---|---|
-| `Skai_Settings` | `includes/class-skai-settings.php` | WP options page; stores all config under the `skai_options` option key |
+| `Skai_Settings` | `includes/class-skai-settings.php` | WP options page; stores config under `skai_options` and resolves provider keys from `wp-config.php` when configured |
 | `Skai_Content` | `includes/class-skai-content.php` | Static `prepare()` strips shortcodes, HTML, image URLs, then truncates to `max_content_chars` |
 | `Skai_Provider` | `includes/providers/class-skai-provider.php` | Abstract base; owns prompt construction, response parsing, deduplication |
 | `Skai_Ajax` | `includes/class-skai-ajax.php` | Single AJAX handler; instantiates the active provider via `make_provider()` |

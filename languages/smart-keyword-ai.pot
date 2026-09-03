@@ -27,6 +27,18 @@ msgstr ""
 msgid "%s API Key"
 msgstr ""
 
+msgid "Configured securely in wp-config.php. The key is not stored or displayed here."
+msgstr ""
+
+msgid "An API key is configured. Enter a new key to replace it; the existing key is never displayed."
+msgstr ""
+
+msgid "Remove the saved API key"
+msgstr ""
+
+msgid "No API key is configured."
+msgstr ""
+
 #, php-format
 msgid "%s Model"
 msgstr ""
